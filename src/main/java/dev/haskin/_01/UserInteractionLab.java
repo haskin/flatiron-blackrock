@@ -1,6 +1,5 @@
 package dev.haskin._01;
 
-import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.Scanner;
 
 public class UserInteractionLab {
