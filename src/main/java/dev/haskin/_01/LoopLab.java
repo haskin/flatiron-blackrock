@@ -19,7 +19,7 @@ public class LoopLab {
         // extension(startingYear, targetYear);
     }
 
-    public static void extension(int startingYear, int targetYear) {
+    public static void extension(final int startingYear, final int targetYear) {
         for (int currentYear = startingYear + 1; currentYear < targetYear; currentYear++) {
             if (currentYear - startingYear == 1) {
                 System.out.println((currentYear - startingYear) + " year have passed");
