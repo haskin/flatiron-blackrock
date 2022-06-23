@@ -19,18 +19,20 @@ public class UserInteractionLab {
      */
     public static int getAge() {
         String question = "Please enter your age:";
-        Scanner userInput = null;
-        while (true) {
-            try {
-                System.out.println(question);
-                userInput = new Scanner(System.in);
-                Integer age = userInput.nextInt();
-                userInput.close();
-                return age;
-            } catch (Exception e) {
-                question = "Please enter a VALID age:";
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
+                try {
+                    System.out.println(question);
+                    return scanner.nextInt();
+                } catch (Exception e) {
+                    question = "Please enter a VALID age:";
+                    scanner.next();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return 0;
     }
 
     /**
