@@ -5,8 +5,9 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
+import javax.swing.DefaultBoundedRangeModel;
+
 public class StudentGame {
-    private static final String DIFFICULTY_PROMPT = "Please choose a difficulty: EASY, MEDIUM, or HARD. Type INFO for difficulty information.";
     private static final String[] INFORMATION = {
             "Easy: guess a number - program will tell you if it was higher or equal (you win) or lower (computer wins) than the program's number.",
             "Medium: guess a number - program will tell you if it was strictly higher (you win) or lower or equal (computer wins) than the program's number.",
@@ -17,10 +18,6 @@ public class StudentGame {
         MEDIUM,
         HARD,
         INFO;
-
-        public static final String parseDifficulty(String difficulty) {
-            return difficulty.trim().toUpperCase();
-        }
 
         public static Optional<Difficulty> getDifficulty(String difficultyValue) {
             String difficultyValueFormatted = difficultyValue.trim().toUpperCase();
@@ -48,8 +45,40 @@ public class StudentGame {
         // int exclusiveUpperBound = 11;
         // System.out.println(getRandomNumber());
         Difficulty gameDifficulty = getUserDifficulty();
-        // outputDifficultyInformation();
+        Integer userGuess = getUserGuess();
+        boolean isWin = playGame(getUserDifficulty(), getUserGuess(), getRandomNumber(11));
+        // boolean isWin = playGame(Difficulty.HARD, 10, getRandomNumber(11));
+        if (isWin)
+            System.out.println("Winner winner, chicken dinner!");
+        else
+            System.out.println("You lost, at least you didn't pay any cost :(");
+
         return;
+    }
+
+    /**
+     * Plays the game. Logic of game is determinated by game difficulty.
+     * 
+     * @param gameDifficulty EASY, MEDIUM, HARD
+     * @param userGuess      0 - 10
+     * @param randomGuess    0 - 10
+     * @return
+     */
+    private static final boolean playGame(Difficulty gameDifficulty, Integer userGuess, Integer randomGuess) {
+        switch (gameDifficulty) {
+            // higher or equal (you win)
+            case EASY:
+                return userGuess >= randomGuess;
+            // strictly higher (you win)
+            case MEDIUM:
+                return userGuess.compareTo(randomGuess) > 0;
+            // it was equal (you win)
+            case HARD:
+                return userGuess.compareTo(randomGuess) == 0;
+            default:
+                System.out.println("Wow. You should not have been able to get here. Have a win!");
+                return true;
+        }
     }
 
     /**
@@ -64,8 +93,15 @@ public class StudentGame {
         System.out.println("------------------------------------------\n");
     }
 
+    /**
+     * Gets user difficulty. Possible values are EASY, MEDIUM, or HARD.
+     * If there is an error with reading System.in, then the default value
+     * EASY is chosen.
+     * 
+     * @return Difficulty
+     */
     private static Difficulty getUserDifficulty() {
-        String difficultyPrompt = "Please choose a difficulty: EASY, MEDIUM, or HARD. Type INFO for difficulty information.";
+        final String difficultyPrompt = "Please choose a difficulty: EASY, MEDIUM, or HARD. Type INFO for difficulty information.";
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
                 try {
@@ -83,14 +119,46 @@ public class StudentGame {
 
                     throw new Exception();
                 } catch (Exception e) {
-                    System.out.println("\nInvalid choice given. Please try again.");
-                    scanner.nextLine();
+                    System.out.println("\nERROR: Invalid answer. Please try again.");
+                    if (scanner.hasNextLine())
+                        scanner.nextLine();
                 }
             }
         } catch (Exception e) {
             System.out.println("Couldn't get user input. Default EASY difficulty will be used");
         }
         return Difficulty.EASY;
+    }
+
+    /**
+     * Get a user guess user terminal. If there is an error getting
+     * the connection to System.in the application is ended.
+     * 
+     * @return Integer
+     */
+    private static Integer getUserGuess() {
+        String userGuessPrompt = "\nPlease enter a number in the range 1-10 (1 and 10 are allowed values).";
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
+                try {
+                    System.out.println(userGuessPrompt);
+                    Integer userGuess = scanner.nextInt();
+                    if (userGuess < 1 || userGuess > 10)
+                        throw new Exception();
+                    return userGuess;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("\nERROR: Invalid answer. Please try again.");
+                    if (scanner.hasNextLine())
+                        scanner.nextLine();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("\nERROR: Problem reading user input. The program will end.");
+            System.exit(0);
+        }
+        return null;
     }
 
     /**
