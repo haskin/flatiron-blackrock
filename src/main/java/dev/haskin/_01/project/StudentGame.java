@@ -44,14 +44,13 @@ public class StudentGame {
     public static void main(String[] args) {
         // int exclusiveUpperBound = 11;
         // System.out.println(getRandomNumber());
-        Difficulty gameDifficulty = getUserDifficulty();
-        Integer userGuess = getUserGuess();
-        boolean isWin = playGame(getUserDifficulty(), getUserGuess(), getRandomNumber(11));
-        // boolean isWin = playGame(Difficulty.HARD, 10, getRandomNumber(11));
-        if (isWin)
-            System.out.println("Winner winner, chicken dinner!");
-        else
-            System.out.println("You lost, at least you didn't pay any cost :(");
+        try (Scanner scanner = new Scanner(System.in)) {
+            Difficulty gameDifficulty = getUserDifficulty(scanner);
+            Integer userGuess = getUserGuess(scanner);
+        } catch (Exception e) {
+            System.out.println("\nERROR: Problem reading user input. The program will end.");
+            System.exit(0);
+        }
 
         return;
     }
@@ -100,34 +99,29 @@ public class StudentGame {
      * 
      * @return Difficulty
      */
-    private static Difficulty getUserDifficulty() {
+    private static Difficulty getUserDifficulty(Scanner scanner) {
         final String difficultyPrompt = "Please choose a difficulty: EASY, MEDIUM, or HARD. Type INFO for difficulty information.";
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (true) {
-                try {
-                    System.out.println(difficultyPrompt);
-                    String userDifficulty = scanner.next();
-                    Optional<Difficulty> optionalDifficulty = Difficulty.getDifficulty(userDifficulty);
-                    if (optionalDifficulty.isPresent()) {
-                        Difficulty difficulty = optionalDifficulty.get();
-                        if (difficulty == Difficulty.INFO) {
-                            outputDifficultyInformation();
-                            continue;
-                        }
-                        return difficulty;
+        while (true) {
+            try {
+                System.out.println(difficultyPrompt);
+                String userDifficulty = scanner.next();
+                Optional<Difficulty> optionalDifficulty = Difficulty.getDifficulty(userDifficulty);
+                if (optionalDifficulty.isPresent()) {
+                    Difficulty difficulty = optionalDifficulty.get();
+                    if (difficulty == Difficulty.INFO) {
+                        outputDifficultyInformation();
+                        continue;
                     }
-
-                    throw new Exception();
-                } catch (Exception e) {
-                    System.out.println("\nERROR: Invalid answer. Please try again.");
-                    if (scanner.hasNextLine())
-                        scanner.nextLine();
+                    return difficulty;
                 }
+
+                throw new Exception();
+            } catch (Exception e) {
+                System.out.println("\nERROR: Invalid answer. Please try again.");
+                if (scanner.hasNextLine())
+                    scanner.nextLine();
             }
-        } catch (Exception e) {
-            System.out.println("Couldn't get user input. Default EASY difficulty will be used");
         }
-        return Difficulty.EASY;
     }
 
     /**
@@ -136,29 +130,22 @@ public class StudentGame {
      * 
      * @return Integer
      */
-    private static Integer getUserGuess() {
+    private static Integer getUserGuess(Scanner scanner) {
         String userGuessPrompt = "\nPlease enter a number in the range 1-10 (1 and 10 are allowed values).";
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (true) {
-                try {
-                    System.out.println(userGuessPrompt);
-                    Integer userGuess = scanner.nextInt();
-                    if (userGuess < 1 || userGuess > 10)
-                        throw new Exception();
-                    return userGuess;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println("\nERROR: Invalid answer. Please try again.");
-                    if (scanner.hasNextLine())
-                        scanner.nextLine();
-                }
+        while (true) {
+            try {
+                System.out.println(userGuessPrompt);
+                Integer userGuess = scanner.nextInt();
+                if (userGuess < 1 || userGuess > 10)
+                    throw new Exception();
+                return userGuess;
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("\nERROR: Invalid answer. Please try again.");
+                if (scanner.hasNextLine())
+                    scanner.nextLine();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("\nERROR: Problem reading user input. The program will end.");
-            System.exit(0);
         }
-        return null;
     }
 
     /**
