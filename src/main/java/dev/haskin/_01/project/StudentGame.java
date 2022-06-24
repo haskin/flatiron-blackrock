@@ -5,8 +5,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
-import javax.swing.DefaultBoundedRangeModel;
-
 public class StudentGame {
     private static final String[] INFORMATION = {
             "Easy: guess a number - program will tell you if it was higher or equal (you win) or lower (computer wins) than the program's number.",
@@ -42,7 +40,7 @@ public class StudentGame {
     }
 
     public static void main(String[] args) {
-        System.out.println("\n ------- GAME START --------");
+        System.out.println("\n ------- GAME START --------\n");
         try (Scanner scanner = new Scanner(System.in)) {
             Difficulty userDifficulty = getUserDifficulty(scanner);
             Integer userGuess = getUserGuess(scanner);
@@ -68,8 +66,8 @@ public class StudentGame {
      * Plays the game. Logic of game is determinated by game difficulty.
      * 
      * @param gameDifficulty EASY, MEDIUM, HARD
-     * @param userGuess      0 - 10
-     * @param randomGuess    0 - 10
+     * @param userGuess      1 - 10
+     * @param randomGuess    1 - 10
      * @return
      */
     private static final boolean playGame(Difficulty gameDifficulty, Integer userGuess, Integer randomGuess) {
@@ -93,8 +91,7 @@ public class StudentGame {
      * Outputs difficulty information in terminal
      */
     private static final void outputDifficultyInformation() {
-        System.out.println();
-        System.out.println("-------- Difficult Information -----------");
+        System.out.println("\n-------- Difficult Information -----------");
         IntStream.range(0, INFORMATION.length)
                 .mapToObj(index -> INFORMATION[index])
                 .forEach(System.out::println);
@@ -158,7 +155,7 @@ public class StudentGame {
     }
 
     /**
-     * Get random number between 0 (inclusive) and exclusiveUpperBound
+     * Get random number between 1 (inclusive) and exclusiveUpperBound
      * 
      * @param exclusiveUpperBound
      * @return
