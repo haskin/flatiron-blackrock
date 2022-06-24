@@ -1,0 +1,3 @@
+[submodule "labs/java-mod-1-passing-by-value-vs-reference-lab"]
+	path = labs/java-mod-1-passing-by-value-vs-reference-lab
+	url = https://github.com/learn-co-curriculum/java-mod-1-passing-by-value-vs-reference-lab
