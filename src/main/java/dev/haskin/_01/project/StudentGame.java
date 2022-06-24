@@ -42,16 +42,25 @@ public class StudentGame {
     }
 
     public static void main(String[] args) {
-        // int exclusiveUpperBound = 11;
-        // System.out.println(getRandomNumber());
+        System.out.println("\n ------- GAME START --------");
         try (Scanner scanner = new Scanner(System.in)) {
-            Difficulty gameDifficulty = getUserDifficulty(scanner);
+            Difficulty userDifficulty = getUserDifficulty(scanner);
             Integer userGuess = getUserGuess(scanner);
+            Integer computerGuess = getRandomNumber(10);
+            boolean isWin = playGame(userDifficulty, userGuess, computerGuess);
+            System.out
+                    .println(String.format("%nProgram Parameters: Difficulty: %s, Your Guess: %s, Computer Guess: %s",
+                            userDifficulty, userGuess, computerGuess));
+            if (isWin) {
+                System.out.println("\nWinner winner, chicken dinner!");
+            } else {
+                System.out.println("\nYou lost :( At least you didn't pay any cost!");
+            }
         } catch (Exception e) {
             System.out.println("\nERROR: Problem reading user input. The program will end.");
             System.exit(0);
         }
-
+        System.out.println("\n ------- GAME ENDED --------");
         return;
     }
 
@@ -156,10 +165,6 @@ public class StudentGame {
      */
     private static int getRandomNumber(int exclusiveUpperBound) {
         Random random = new Random();
-        return random.nextInt(exclusiveUpperBound);
+        return random.nextInt(exclusiveUpperBound) + 1;
     }
-}
-
-class AsciiArt {
-    public static final String GAME_TITLE = "START GAME";
 }
